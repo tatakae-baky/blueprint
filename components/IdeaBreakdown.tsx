@@ -163,7 +163,7 @@ export default function IdeaBreakdown({
       </CardHeader>
       {expandedSections.includes(priority) && (
         <CardContent>
-          <h4 className="blueprint-subheading mb-2">Frontend Components:</h4>
+          <h4 className="blueprint-subheading mt-6 mb-2">Frontend Components:</h4>
           {breakdown.priorities[priority]?.frontend?.components?.map((component, index) =>
             renderComponent(component, index, priority)
           ) || <p className="blueprint-text">No frontend components for this priority level.</p>}
@@ -172,7 +172,7 @@ export default function IdeaBreakdown({
             renderService(service, index, priority)
           ) || <p className="blueprint-text">No backend services for this priority level.</p>}
           <div className="mt-4">
-            <h4 className="blueprint-subheading mb-2">Data Model:</h4>
+            <h4 className="blueprint-subheading mb-2 mt-8">Data Model:</h4>
             {breakdown.priorities[priority]?.backend?.dataModel?.length > 0 ? (
               <ul className="list-disc pl-5 blueprint-text">
                 {breakdown.priorities[priority].backend.dataModel.map((item, index) => (

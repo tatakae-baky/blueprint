@@ -82,6 +82,17 @@ html {
   overflow-y: scroll;
 }
 
+/* Custom Text Selection */
+::selection {
+  background: #93c5fd;
+  color: #1e3a8a;
+}
+
+::-moz-selection {
+  background: #93c5fd;
+  color: #1e3a8a;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

@@ -185,8 +185,8 @@ export default function Home() {
         {isLoading && <LoadingScreen />}
 
         {error && (
-          <Alert variant="destructive" className="mt-4">
-            <AlertDescription>{error}</AlertDescription>
+          <Alert variant="destructive" className="mt-4 border border-2 border-blue-200 bg-blue-50/50 text-blue-900">
+            <AlertDescription className="font-medium">⚠️ {error}</AlertDescription>
           </Alert>
         )}
 

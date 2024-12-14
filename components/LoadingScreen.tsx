@@ -32,7 +32,6 @@ export default function LoadingScreen() {
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
             <Loader2 className="h-8 w-8 animate-spin text-blue-300" />
-            <div className="absolute -bottom-2 left-1/2 h-1 w-1 rounded-full bg-blue-300 animate-bounce" />
           </div>
           <p className="text-lg font-medium animate-pulse blueprint-text">
             {loadingSteps[currentStep]}

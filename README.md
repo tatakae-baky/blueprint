@@ -39,7 +39,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## Environment Variables
 
 Required environment variables:
-- `OPENAI_API_KEY`: Your OpenAI API key
+- `GOOGLE_AI_API_KEY`: Your OpenAI API key
 
 ## License
 

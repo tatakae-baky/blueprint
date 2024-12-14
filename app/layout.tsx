@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} blueprint-bg min-h-screen`}>
         <div className="ruler-top">
-          {[...Array(10)].map((_, i) => (
+          {[...Array(20)].map((_, i) => (
             <span key={i} className="ruler-marks" style={{ left: `${(i + 1) * 100}px` }}>
               {(i + 1) * 100}
             </span>

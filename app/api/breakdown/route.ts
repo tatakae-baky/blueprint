@@ -8,6 +8,8 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY)
 
 export async function POST(req: Request) {
   try {
+    console.log('Google AI Key exists:', !!process.env.GOOGLE_AI_API_KEY)
+    
     const { idea, depth = 1, focusArea = null } = await req.json()
     if (!idea || typeof idea !== 'string') {
       return Response.json({ error: 'Invalid input' }, { status: 400 })

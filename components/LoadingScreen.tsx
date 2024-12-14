@@ -28,7 +28,7 @@ export default function LoadingScreen() {
 
   return (
     <Card className="w-full blueprint-card rounded-md mt-4">
-      <CardContent className="pt-6 mt-4">
+      <CardContent className="pt-6 mt-4 pb-8">
         <div className="flex flex-col items-center space-y-4">
           <div className="relative">
             <Loader2 className="h-8 w-8 animate-spin text-blue-300" />

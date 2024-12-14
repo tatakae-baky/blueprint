@@ -152,67 +152,94 @@ export default function Home() {
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl relative z-10">
-      <Card className="p-12 mt-8 blueprint-card">
-        <h1 className="text-3xl font-bold mb-4 blueprint-title">Project Blueprint Generator</h1>
-        <p className="blueprint-text mb-8">Got an idea? Get a step-by-step technical blueprint and start building!</p>
-        
-        <div className="space-y-4">
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <div className="flex-grow">
-              <Input
-                type="text"
-                value={currentQuery.idea}
-                onChange={(e) => setCurrentQuery(prev => ({ ...prev, idea: e.target.value }))}
-                placeholder="I want to build..."
-                disabled={isLoading}
-                className="w-full blueprint-input border border-2"
-              />
+    <div className="min-h-screen flex flex-col">
+      <div className="container mx-auto px-4 flex-grow flex items-center justify-center">
+        <div className="w-full max-w-4xl">
+          <Card className="p-12 blueprint-card">
+            <h1 className="text-3xl font-bold mb-4 blueprint-title">Project Blueprint Generator</h1>
+            <p className="blueprint-text mb-8">Got an idea? Get a step-by-step technical blueprint and start building!</p>
+            
+            <div className="space-y-4">
+              <form onSubmit={handleSubmit} className="flex gap-2">
+                <div className="flex-grow">
+                  <Input
+                    type="text"
+                    value={currentQuery.idea}
+                    onChange={(e) => setCurrentQuery(prev => ({ ...prev, idea: e.target.value }))}
+                    placeholder="I want to build..."
+                    disabled={isLoading}
+                    className="w-full blueprint-input border border-2"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  disabled={isLoading || !currentQuery.idea.trim()}
+                  className="blueprint-button-primary font-bold"
+                >
+                  Get blueprint
+                </Button>
+              </form>
+              {!currentQuery.breakdown && !isLoading && (
+                <PromptCarousel onPromptSelect={handlePromptSelect} />
+              )}
             </div>
-            <Button 
-              type="submit" 
-              disabled={isLoading || !currentQuery.idea.trim()}
-              className="blueprint-button-primary font-bold"
-            >
-              Get blueprint
-            </Button>
-          </form>
-          {!currentQuery.breakdown && !isLoading && (
-            <PromptCarousel onPromptSelect={handlePromptSelect} />
-          )}
+
+            {isLoading && <LoadingScreen />}
+
+            {error && (
+              <Alert variant="destructive" className="mt-4 border border-2 border-blue-200 bg-blue-50/50 text-blue-900">
+                <AlertDescription className="font-medium">⚠️ {error}</AlertDescription>
+              </Alert>
+            )}
+
+            {currentQuery.breakdown && (
+              <div className="mt-8">
+                <QueryHistory
+                  history={queryHistory.map(q => ({ idea: q.idea, focusArea: q.focusArea }))}
+                  currentIndex={queryHistory.length - 1}
+                  onSelect={handleNavigateToQuery}
+                />
+                <IdeaBreakdown
+                  breakdown={currentQuery.breakdown}
+                />
+              </div>
+            )}
+            <style jsx>{`
+              :global(.blueprint-button-primary) {
+                background-color: white !important;
+                color: #1e3a8a !important;
+                border: 1px solid #93c5fd !important;
+              }
+              :global(.blueprint-button-primary:hover) {
+                background-color: #f0f9ff !important;
+              }
+            `}</style>
+          </Card>
         </div>
-
-        {isLoading && <LoadingScreen />}
-
-        {error && (
-          <Alert variant="destructive" className="mt-4 border border-2 border-blue-200 bg-blue-50/50 text-blue-900">
-            <AlertDescription className="font-medium">⚠️ {error}</AlertDescription>
-          </Alert>
-        )}
-
-        {currentQuery.breakdown && (
-          <div className="mt-8">
-            <QueryHistory
-              history={queryHistory.map(q => ({ idea: q.idea, focusArea: q.focusArea }))}
-              currentIndex={queryHistory.length - 1}
-              onSelect={handleNavigateToQuery}
-            />
-            <IdeaBreakdown
-              breakdown={currentQuery.breakdown}
-            />
-          </div>
-        )}
-        <style jsx>{`
-          :global(.blueprint-button-primary) {
-            background-color: white !important;
-            color: #1e3a8a !important;
-            border: 1px solid #93c5fd !important;
-          }
-          :global(.blueprint-button-primary:hover) {
-            background-color: #f0f9ff !important;
-          }
-        `}</style>
-      </Card>
+      </div>
+      
+      <footer className="w-full py-4 mt-auto">
+        <p className="text-center text-xs blueprint-text opacity-50">
+          floguo 2024 • {' '}
+          <a 
+            href="https://x.com/floguo" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            Twitter
+          </a>
+          {' '} • {' '}
+          <a 
+            href="https://github.com/floguo" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            GitHub
+          </a>
+        </p>
+      </footer>
     </div>
   )
 }

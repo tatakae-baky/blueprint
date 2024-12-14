@@ -199,8 +199,6 @@ export default function Home() {
             />
             <IdeaBreakdown
               breakdown={currentQuery.breakdown}
-              currentDepth={currentQuery.depth}
-              focusArea={currentQuery.focusArea}
             />
           </div>
         )}

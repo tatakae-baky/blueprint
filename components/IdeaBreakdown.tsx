@@ -44,14 +44,10 @@ interface Breakdown {
 
 interface IdeaBreakdownProps {
   breakdown: Breakdown;
-  currentDepth: number;
-  focusArea: string | null;
 }
 
 export default function IdeaBreakdown({
   breakdown,
-  currentDepth,
-  focusArea,
 }: IdeaBreakdownProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>(['overview', 'p0'])
   const [expandedComponents, setExpandedComponents] = useState<string[]>([])
@@ -72,7 +68,7 @@ export default function IdeaBreakdown({
     )
   }
 
-  const renderComponent = (component: Component, index: number, priority: string) => (
+  const renderComponent = (component: Component, index: number) => (
     <Card key={index} className="mt-4 blueprint-card">
       <CardHeader>
         <CardTitle className="flex items-center justify-between blueprint-text">
@@ -107,7 +103,7 @@ export default function IdeaBreakdown({
     </Card>
   )
 
-  const renderService = (service: Service, index: number, priority: string) => (
+  const renderService = (service: Service, index: number ) => (
     <Card key={index} className="mt-4 blueprint-card">
       <CardHeader>
         <CardTitle className="flex items-center justify-between blueprint-text">
@@ -165,11 +161,11 @@ export default function IdeaBreakdown({
         <CardContent>
           <h4 className="blueprint-subheading mt-6 mb-2">Frontend Components:</h4>
           {breakdown.priorities[priority]?.frontend?.components?.map((component, index) =>
-            renderComponent(component, index, priority)
+            renderComponent(component, index)
           ) || <p className="blueprint-text">No frontend components for this priority level.</p>}
           <h4 className="blueprint-subheading mt-8">Backend Services:</h4>
           {breakdown.priorities[priority]?.backend?.services?.map((service, index) =>
-            renderService(service, index, priority)
+            renderService(service, index)
           ) || <p className="blueprint-text">No backend services for this priority level.</p>}
           <div className="mt-4">
             <h4 className="blueprint-subheading mb-2 mt-8">Data Model:</h4>

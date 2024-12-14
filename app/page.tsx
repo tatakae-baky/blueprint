@@ -157,7 +157,7 @@ export default function Home() {
         <div className="w-full max-w-4xl">
           <Card className="p-12 blueprint-card">
             <h1 className="text-3xl font-bold mb-4 blueprint-title">Project Blueprint Generator</h1>
-            <p className="blueprint-text mb-8">Got an idea? Get a step-by-step technical blueprint and start building!</p>
+            <p className="blueprint-text mb-8">Have an idea? Get a step-by-step technical blueprint and start building!</p>
             
             <div className="space-y-4">
               <form onSubmit={handleSubmit} className="flex gap-2">

@@ -126,7 +126,7 @@ export default function IdeaBreakdown({
         <p className="mb-2 blueprint-text">{service.description}</p>
         {expandedComponents.includes(service.name) && (
           <div>
-            <h5 className="blueprint-subheading mb-2">Requirements:</h5>
+            <h5 className="blueprint-subheading mb-2 mt-6">Requirements:</h5>
             <ul className="list-disc pl-5 blueprint-text">
               {service.requirements.map((req, idx) => (
                 <li key={idx}>{req}</li>
@@ -236,9 +236,11 @@ export default function IdeaBreakdown({
         {expandedSections.includes('developmentSteps') && (
           <CardContent>
             {breakdown.developmentSteps.map((phase, index) => (
-              <div key={index} className="mb-4">
-                <h4 className="blueprint-subheading mb-2">{phase.phase}</h4>
-                <Badge className="mb-2 blueprint-text">{phase.priority}</Badge>
+              <div key={index} className="mb-4 mt-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <h4 className="blueprint-subheading">{phase.phase}</h4>
+                  <Badge className="mx-1 blueprint-text bg-blue-200/10">{phase.priority}</Badge>
+                </div>
                 <ul className="list-disc pl-5 blueprint-text">
                   {phase.tasks.map((task, taskIndex) => (
                     <li key={taskIndex}>{task}</li>

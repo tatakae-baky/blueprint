@@ -2,6 +2,7 @@ import './globals.css'
 import './styles/carousel-animations.css'
 import './styles/blueprint.css'
 import { Inter } from 'next/font/google'
+import 'reactflow/dist/style.css';
 
 const inter = Inter({ subsets: ['latin'] })
 

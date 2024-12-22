@@ -2,13 +2,14 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import { Card } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import IdeaBreakdown from '@/components/IdeaBreakdown'
 import QueryHistory from '@/components/QueryHistory'
 import PromptCarousel from '@/components/PromptCarousel'
 import LoadingScreen from '@/components/LoadingScreen'
+import SystemArchitectureDiagram from '@/components/SystemArchitectureDiagram/index'
 
 interface Component {
   name: string;
@@ -160,21 +161,32 @@ export default function Home() {
             <p className="blueprint-text mb-8">Have an idea? Get a step-by-step technical blueprint and start building!</p>
             
             <div className="space-y-4">
-              <form onSubmit={handleSubmit} className="flex gap-2">
+              <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-grow">
-                  <Input
-                    type="text"
+                  <Textarea
                     value={currentQuery.idea}
                     onChange={(e) => setCurrentQuery(prev => ({ ...prev, idea: e.target.value }))}
                     placeholder="I want to build..."
                     disabled={isLoading}
-                    className="w-full blueprint-input border border-2"
+                    className="w-full blueprint-input border border-2 resize-none"
+                    rows={1}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmit();
+                      }
+                    }}
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = 'auto';
+                      target.style.height = `${target.scrollHeight}px`;
+                    }}
                   />
                 </div>
                 <Button 
                   type="submit" 
                   disabled={isLoading || !currentQuery.idea.trim()}
-                  className="blueprint-button-primary font-bold"
+                  className="blueprint-button-primary font-bold h-10"
                 >
                   Get blueprint
                 </Button>
@@ -202,6 +214,30 @@ export default function Home() {
                 <IdeaBreakdown
                   breakdown={currentQuery.breakdown}
                 />
+                <div className="mt-4">
+                  <SystemArchitectureDiagram
+                    components={[
+                      {
+                        id: "frontend",
+                        type: "frontend",
+                        name: "Web Interface",
+                        connections: ["api"]
+                      },
+                      {
+                        id: "api",
+                        type: "backend",
+                        name: "API Server",
+                        connections: ["db"]
+                      },
+                      {
+                        id: "db",
+                        type: "database",
+                        name: "Database",
+                        connections: []
+                      }
+                    ]}
+                  />
+                </div>
               </div>
             )}
             <style jsx>{`
@@ -218,26 +254,9 @@ export default function Home() {
         </div>
       </div>
       
-      <footer className="w-full py-4 mt-auto">
-        <p className="text-center text-xs blueprint-text opacity-50">
-          floguo 2024 • {' '}
-          <a 
-            href="https://x.com/floguo" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:opacity-80 transition-opacity"
-          >
-            Twitter
-          </a>
-          {' '} • {' '}
-          <a 
-            href="https://github.com/floguo" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:opacity-80 transition-opacity"
-          >
-            GitHub
-          </a>
+      <footer className="w-full py-2 mt-auto">
+        <p className="text-center text-sm blueprint-text opacity-70 font-mono tracking-wide">
+        ⚡️ Cook the process 
         </p>
       </footer>
     </div>

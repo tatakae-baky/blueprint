@@ -52,6 +52,7 @@
   background-color: rgba(30, 58, 138, 0.8) !important;
   border: 1px solid rgba(147, 197, 253, 0.2) !important;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .blueprint-input {
@@ -105,5 +106,25 @@
   font-size: 0.9rem;
   font-weight: 600;
   color: #93c5fd !important;
+}
+
+.blueprint-button-secondary {
+  background-color: white !important;
+  color: #1e3a8a !important;
+  border: 1px solid #93c5fd !important;
+}
+
+.blueprint-button-secondary:hover {
+  background-color: #f0f9ff !important;
+}
+
+.react-flow__controls-button {
+  border-color: var(--border) !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.react-flow__controls-button:hover {
+  background-color: var(--muted) !important;
 }
 

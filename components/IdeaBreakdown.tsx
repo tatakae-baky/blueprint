@@ -2,7 +2,14 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
-import { ChevronDown, ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight, Maximize2, Minimize2, Download, FileJson, FileText, Printer } from 'lucide-react'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu"
+import html2pdf from 'html2pdf.js'
 
 interface Component {
   name: string;
@@ -66,6 +73,29 @@ export default function IdeaBreakdown({
         ? prev.filter(name => name !== componentName)
         : [...prev, componentName]
     )
+  }
+
+  const toggleAll = () => {
+    const allSections = ['overview', 'p0', 'p1', 'p2', 'developmentSteps']
+    const allComponents = [
+      ...breakdown.priorities.p0.frontend.components.map(c => c.name),
+      ...breakdown.priorities.p0.backend.services.map(s => s.name),
+      ...breakdown.priorities.p1.frontend.components.map(c => c.name),
+      ...breakdown.priorities.p1.backend.services.map(s => s.name),
+      ...breakdown.priorities.p2.frontend.components.map(c => c.name),
+      ...breakdown.priorities.p2.backend.services.map(s => s.name),
+    ]
+    
+    if (expandedSections.length === allSections.length && 
+        expandedComponents.length === allComponents.length) {
+      // Collapse all
+      setExpandedSections([])
+      setExpandedComponents([])
+    } else {
+      // Expand all
+      setExpandedSections(allSections)
+      setExpandedComponents(allComponents)
+    }
   }
 
   const renderComponent = (component: Component, index: number) => (
@@ -184,8 +214,149 @@ export default function IdeaBreakdown({
     </Card>
   )
 
+  const exportToPDF = async () => {
+    const element = document.getElementById('idea-breakdown')
+    if (!element) return
+
+    const opt = {
+      margin: 1,
+      filename: 'blueprint-breakdown.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    }
+
+    try {
+      await html2pdf().set(opt).from(element).save()
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+    }
+  }
+
+  const exportToJSON = () => {
+    const dataStr = JSON.stringify(breakdown, null, 2)
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr)
+    const exportFileDefaultName = 'blueprint-breakdown.json'
+
+    const linkElement = document.createElement('a')
+    linkElement.setAttribute('href', dataUri)
+    linkElement.setAttribute('download', exportFileDefaultName)
+    linkElement.click()
+  }
+
+  const exportToMarkdown = () => {
+    let md = `# Project Blueprint Breakdown\n\n`
+    
+    // Add Overview
+    md += `## Overview\n\n${breakdown.overview}\n\n`
+    
+    // Add Priorities
+    const priorities = ['p0', 'p1', 'p2'] as const
+    priorities.forEach(p => {
+      md += `## Priority ${p.toUpperCase()}\n\n`
+      
+      // Frontend Components
+      md += `### Frontend Components\n\n`
+      const components = breakdown.priorities[p]?.frontend?.components || []
+      components.forEach(comp => {
+        md += `#### ${comp.name}\n\n`
+        md += `${comp.description}\n\n`
+        md += `**Requirements:**\n\n`
+        comp.requirements.forEach(req => {
+          md += `- ${req}\n`
+        })
+        md += '\n'
+      })
+      
+      // Backend Services
+      md += `### Backend Services\n\n`
+      const services = breakdown.priorities[p]?.backend?.services || []
+      services.forEach(service => {
+        md += `#### ${service.name}\n\n`
+        md += `${service.description}\n\n`
+        md += `**Requirements:**\n\n`
+        service.requirements.forEach(req => {
+          md += `- ${req}\n`
+        })
+        md += '\n'
+      })
+      
+      // Data Model
+      md += `### Data Model\n\n`
+      const dataModel = breakdown.priorities[p]?.backend?.dataModel || []
+      dataModel.forEach(item => {
+        md += `- ${item}\n`
+      })
+      md += '\n'
+    })
+    
+    // Development Steps
+    md += `## Development Steps\n\n`
+    breakdown.developmentSteps.forEach(step => {
+      md += `### ${step.phase} (${step.priority})\n\n`
+      step.tasks.forEach(task => {
+        md += `- ${task}\n`
+      })
+      md += '\n'
+    })
+
+    const dataUri = 'data:text/markdown;charset=utf-8,'+ encodeURIComponent(md)
+    const linkElement = document.createElement('a')
+    linkElement.setAttribute('href', dataUri)
+    linkElement.setAttribute('download', 'blueprint-breakdown.md')
+    linkElement.click()
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" id="idea-breakdown">
+      <div className="flex justify-end gap-2">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="blueprint-button-secondary gap-2"
+            >
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={exportToPDF}>
+              <Printer className="h-4 w-4 mr-2" />
+              Export as PDF
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={exportToJSON}>
+              <FileJson className="h-4 w-4 mr-2" />
+              Export as JSON
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={exportToMarkdown}>
+              <FileText className="h-4 w-4 mr-2" />
+              Export as Markdown
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={toggleAll}
+          className="blueprint-button-secondary gap-2"
+        >
+          {expandedSections.length === 5 ? (
+            <>
+              <Minimize2 className="h-4 w-4" />
+              Collapse All
+            </>
+          ) : (
+            <>
+              <Maximize2 className="h-4 w-4" />
+              Expand All
+            </>
+          )}
+        </Button>
+      </div>
+
       <Card className="blueprint-card">
         <CardHeader>
           <CardTitle className="flex items-center justify-between blueprint-text">

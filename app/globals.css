@@ -117,3 +117,23 @@ html {
   scrollbar-width: thin;
   scrollbar-color: #93c5fd transparent;
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #idea-breakdown,
+  #idea-breakdown * {
+    visibility: visible;
+  }
+  #idea-breakdown {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  .blueprint-button,
+  .blueprint-button-secondary {
+    display: none !important;
+  }
+}
